@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistReducer } from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import cartReducer from "./features/cartSlice";
 import productApi from "./service/product/productApi";
@@ -19,7 +19,14 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
+
+  middleware: (getDefualtMiddleware) =>
+    getDefualtMiddleware({ serializableCheck: false }).concat(
+      productApi.middleware
+    ),
 });
+
+export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

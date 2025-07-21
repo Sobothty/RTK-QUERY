@@ -5,6 +5,7 @@ import "./globals.css";
 import ReduxProvider from "@/lib/Provider";
 import { Suspense } from "react";
 import SuspenseLoading from "@/components/SuspenseLoading";
+import NavbarWrapper from "@/components/header/NavbarWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReduxProvider>
+          <NavbarWrapper />
           <Suspense fallback={<SuspenseLoading />}>{children}</Suspense>
         </ReduxProvider>
       </body>
