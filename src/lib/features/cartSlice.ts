@@ -37,13 +37,13 @@ const cartSlice = createSlice({
 
     updateFromCart: (
       state,
-      action: PayloadAction<{ id: number; quatity: number }>
+      action: PayloadAction<{ id: number; quantity: number }>
     ) => {
-      const { id, quatity } = action.payload;
+      const { id, quantity } = action.payload;
       const item = state.items.find((item) => item.id === id);
 
       if (item) {
-        item.quantity = Math.max(0, quatity);
+        item.quantity = Math.max(0, quantity);
         if (item.quantity === 0) {
           state.items = state.items.filter((item) => item.id !== id);
         }

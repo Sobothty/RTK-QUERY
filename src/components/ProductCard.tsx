@@ -15,12 +15,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
+    console.log("Adding to cart:", product.id);
     dispatch(addToCart(product));
-  };
-
-  const handleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    // Add wishlist functionality here
   };
 
   return (
@@ -47,22 +43,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {/* Sale Badge */}
           <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
             SALE
-          </div>
-
-          {/* Quick Action Buttons */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-            <button
-              onClick={handleWishlist}
-              className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200"
-            >
-              <Heart className="w-4 h-4 text-gray-600 hover:text-red-500" />
-            </button>
-            <Link
-              href={`/product/${product.id}`}
-              className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all duration-200"
-            >
-              <Eye className="w-4 h-4 text-gray-600 hover:text-blue-500" />
-            </Link>
           </div>
 
           {/* Category Badge */}

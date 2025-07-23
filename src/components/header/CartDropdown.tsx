@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { X, Plus, Minus, ShoppingBag, Trash2 } from "lucide-react";
+import { useAppSelector } from "@/lib/hook";
 
 interface CartItem {
   id: number;
@@ -20,24 +21,9 @@ interface CartDropdownProps {
 
 const CartDropdown = ({ isOpen, onClose }: CartDropdownProps) => {
   // Mock cart items - replace with actual cart data from RTK
-  const cartItems: CartItem[] = [
-    {
-      id: 1,
-      title: "Wireless Bluetooth Headphones",
-      price: 99.99,
-      image: "https://via.placeholder.com/100",
-      quantity: 1,
-    },
-    {
-      id: 2,
-      title: "Smart Watch Series 5",
-      price: 299.99,
-      image: "https://via.placeholder.com/100",
-      quantity: 2,
-    },
-  ];
+  const { items } = useAppSelector((state) => state.cart);
 
-  const totalPrice = cartItems.reduce(
+  const totalPrice = items.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
@@ -67,7 +53,7 @@ const CartDropdown = ({ isOpen, onClose }: CartDropdownProps) => {
 
         {/* Cart Items */}
         <div className="max-h-96 overflow-y-auto">
-          {cartItems.length === 0 ? (
+          {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 px-4">
               <ShoppingBag className="w-16 h-16 text-gray-300 mb-4" />
               <p className="text-gray-500 text-center mb-2">
@@ -79,7 +65,7 @@ const CartDropdown = ({ isOpen, onClose }: CartDropdownProps) => {
             </div>
           ) : (
             <div className="p-4 space-y-4">
-              {cartItems.map((item) => (
+              {items.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-center space-x-3 group"
@@ -129,7 +115,7 @@ const CartDropdown = ({ isOpen, onClose }: CartDropdownProps) => {
         </div>
 
         {/* Footer */}
-        {cartItems.length > 0 && (
+        {items.length > 0 && (
           <div className="border-t border-gray-100 p-4 space-y-4">
             {/* Total */}
             <div className="flex items-center justify-between">

@@ -4,11 +4,14 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search, ShoppingCart, User, Menu, X, Heart, Bell } from "lucide-react";
 import CartDropdown from "./CartDropdown";
+import { useAppSelector } from "@/lib/hook";
 
 const NavbarWrapper = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const { items } = useAppSelector((state) => state.cart);
 
   // Handle scroll effect
   useEffect(() => {
@@ -105,7 +108,7 @@ const NavbarWrapper = () => {
               >
                 <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                  2
+                  {items.length}
                 </span>
               </button>
 
