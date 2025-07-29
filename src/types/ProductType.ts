@@ -1,31 +1,37 @@
-export type Product = {
+export interface Product {
   id: number;
   title: string;
-  slug: string;
   price: number;
   description: string;
-  category: Category;
   images: string[];
   creationAt: string;
   updatedAt: string;
-};
+  category: Category;
+}
 
-export type Category = {
+export interface Category {
   id: number;
   name: string;
-  slug: string;
   image: string;
   creationAt: string;
   updatedAt: string;
-};
+}
 
-export type ProductsQueryParams = {
-  title?: string           // Search by product title
-  price?: number           // Exact price
-  price_min?: number       // Minimum price range
-  price_max?: number       // Maximum price range
-  categoryId?: number      // Filter by category ID
-  categorySlug?: string    // Filter by category slug
-  limit?: number           // Pagination - number of items
-  offset?: number          // Pagination - starting index
+export interface CreateProductRequest {
+  title: string;
+  price: number;
+  description: string;
+  categoryId: number;
+  images: string[];
+}
+
+export interface ProductsQueryParams {
+  title?: string;
+  price?: number;
+  price_min?: number;
+  price_max?: number;
+  categoryId?: number;
+  categorySlug?: string;
+  limit?: number;
+  offset?: number;
 }

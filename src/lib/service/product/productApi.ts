@@ -1,5 +1,17 @@
-import { Product, ProductsQueryParams } from "@/types/ProductType";
+import {
+  Category,
+  Product,
+  ProductsQueryParams,
+  CreateProductRequest,
+} from "@/types/ProductType";
 import { apiSlide } from "../apislice/apiSlice";
+
+// Add interface for upload response
+interface UploadResponse {
+  originalname: string;
+  filename: string;
+  location: string;
+}
 
 const productApi = apiSlide.injectEndpoints({
   endpoints: (builder) => ({
@@ -34,14 +46,97 @@ const productApi = apiSlide.injectEndpoints({
 
         return `products?${searchParams.toString()}`;
       },
+      providesTags: ["Product"],
     }),
+
     getProductById: builder.query<Product, number>({
-      // Get Product By ID
       query: (id) => `products/${id}`,
+      providesTags: (result, error, id) => [{ type: "Product", id }],
+    }),
+
+    // Fix: Change this to getCategories instead of getCategoryProducts
+    getCategories: builder.query<Category[], void>({
+      query: () => `categories`,
+      providesTags: ["Category"],
+    }),
+
+    getCategoryById: builder.query<Category, number>({
+      query: (id) => `categories/${id}`,
+      providesTags: (result, error, id) => [{ type: "Category", id }],
+    }),
+
+    // Fix: Ensure proper create product mutation
+    createProduct: builder.mutation<Product, CreateProductRequest>({
+      query: (newProduct) => ({
+        url: "products",
+        method: "POST",
+        body: newProduct,
+      }),
+      invalidatesTags: ["Product"],
+      transformResponse: (response: Product) => {
+        console.log("Product created successfully:", response);
+        return response;
+      },
+      transformErrorResponse: (response: any) => {
+        console.error("Error creating product:", response);
+        return response;
+      },
+    }),
+
+    updateProduct: builder.mutation<
+      Product,
+      { id: number; data: Partial<CreateProductRequest> }
+    >({
+      query: ({ id, data }) => ({
+        url: `products/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Product", id },
+        "Product",
+      ],
+    }),
+
+    deleteProduct: builder.mutation<{ message: string }, number>({
+      query: (id) => ({
+        url: `products/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, id) => [
+        { type: "Product", id },
+        "Product",
+      ],
+    }),
+
+    // Add image upload mutation
+    uploadImage: builder.mutation<UploadResponse, FormData>({
+      query: (formData) => ({
+        url: "files/upload",
+        method: "POST",
+        body: formData,
+      }),
+      transformResponse: (response: UploadResponse) => {
+        console.log("Image uploaded successfully:", response);
+        return response;
+      },
+      transformErrorResponse: (response: any) => {
+        console.error("Error uploading image:", response);
+        return response;
+      },
     }),
   }),
 });
 
-export const { useGetProductsQuery, useGetProductByIdQuery } = productApi;
+export const {
+  useGetProductsQuery,
+  useGetProductByIdQuery,
+  useGetCategoriesQuery, // Fixed: Export the correct hook
+  useGetCategoryByIdQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  useUploadImageMutation, // Export the upload image hook
+} = productApi;
 
 export default productApi;
